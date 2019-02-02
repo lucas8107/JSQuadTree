@@ -1,6 +1,10 @@
 var canvas;
 var ctx;
 
+function getDistance(x1,y1,x2,y2) {
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+}
+
 class QuadTree {
     constructor(x1, y1, x2, y2) {
         this.x1 = x1;
@@ -16,6 +20,19 @@ class QuadTree {
         this.SW = new QuadLeaf(x1, this.cy, this.cx, y2);
         this.SE = new QuadLeaf(this.cx, this.cy, x2, y2);
     }
+}
+
+function overlaps(x, y, r, quadtree) {
+    d1 = getDistance(x,y,quadtree.x1,quadtree.y1);
+    d2 = getDistance(x,y,quadtree.x2,quadtree.y2);
+    d3 = getDistance(x,y,quadtree.x1,quadtree.y2);
+    d4 = getDistance(x,y,quadtree.x2,quadtree.y1);
+    
+    if(d1 <= r || d2 <= r || d3 <= r || d4 <= r)
+        return true;
+
+    if(x >= quadtree.x1 && x <= quadtree.x2 && y >= quadtree.y1 && y <= quadtree.y2)
+        return true;
 }
 
 function insertQuadTree(quadtree, point) {
